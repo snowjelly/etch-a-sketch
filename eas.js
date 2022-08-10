@@ -3,6 +3,9 @@ const slider = document.getElementById('slider');
 const sliderSize = document.querySelectorAll('#value');
 let gridSize = 0;
 
+//  need to add the extra credit assignment, clear button and more than 0 styling
+  
+
 //  update Grid size
 sliderSize.forEach((size) => {
   size.innerHTML = slider.value;
@@ -47,6 +50,7 @@ slider.oninput = () => {
     });
     removeDivs();
     createDivs(slider.value);
+    draw('red');
 }
 
 createDivs();
