@@ -1,7 +1,7 @@
 const gridContainer = document.querySelector('.grid-container');
 const slider = document.getElementById('slider');
 const sliderSize = document.querySelectorAll('#value');
-
+let gridSize = 0;
 
 //  update Grid size
 sliderSize.forEach((size) => {
@@ -20,8 +20,8 @@ const createDivs = (gridSize = 16) => {
 }
 
 const getGridSize = (size) => {
-  const gridSize = size;
-  return size;
+  gridSize = size;
+  return gridSize;
 }
 
 const draw = (gridItemColor) => {
@@ -34,7 +34,10 @@ const draw = (gridItemColor) => {
 } 
 
 const removeDivs = () => {
-  gridContainer.removeChild(newDiv);
+  const gridItems = document.querySelectorAll('.grid-item');
+  gridItems.forEach((gridItem) => {
+    gridContainer.removeChild(gridItem);
+  });
 }
 
 // update Grid size when slider is used
@@ -42,7 +45,10 @@ slider.oninput = () => {
   sliderSize.forEach((size) => {
       size.innerHTML = slider.value;
     });
+    removeDivs();
+    createDivs(slider.value);
 }
 
 createDivs();
 draw('red');
+
