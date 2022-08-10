@@ -12,7 +12,12 @@
         <h1>Etch-a-Sketch</h1>
       </header>
       <main class="main">
-        <div class="settings"></div>
+        <div class="settings">
+          <div class="slider-container">
+            <input type="range" min="16" max="60" value="16" class="slider" id="slider">
+            <p>Grid size: <span id="value"></span> x <span id="value"></span></p>
+          </div>
+        </div>
         <div class="grid-wrapper">
           <div class="grid-container">
 
