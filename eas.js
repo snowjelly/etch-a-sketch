@@ -16,6 +16,7 @@ const createDivs = (gridSize = 16) => {
   for (i = 0; i < gridSize * gridSize; i++) {
     const newDiv = document.createElement('div');
     newDiv.classList.toggle('grid-item');
+    newDiv.setAttribute('draggable', 'false');
     gridContainer.appendChild(newDiv);
   }
   gridContainer.setAttribute('style', 'grid-template-columns: repeat(' + gridSize + ', auto); grid-template-rows: repeat('+ gridSize +', auto);')
@@ -29,13 +30,12 @@ const getGridSize = (size) => {
 
 const draw = (gridItemColor) => {
   const gridItems = document.querySelectorAll('.grid-item');
-  gridItems.forEach((gridItem) => {
-    gridItem.addEventListener('mouseenter', () => {
-      gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+  gridItems.forEach((gridItem) => { //if mousedown then mouseenter/exit then stop if mouseup
+      gridItem.addEventListener('mouseenter', () => {
+        gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
     });
-  });
-} 
-
+  }); 
+}
 const removeDivs = () => {
   const gridItems = document.querySelectorAll('.grid-item');
   gridItems.forEach((gridItem) => {
