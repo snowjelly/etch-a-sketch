@@ -1,13 +1,28 @@
+body {
+  background-color: #121212;;
+}
+
 .wrapper {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
+.header {
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
 .main {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   flex: 1;
+}
+
+.slider-container p {
+  color: white;
+  font-size: 2rem;
 }
 
 .grid-wrapper {
@@ -21,6 +36,7 @@
   width: 600px;
   height: 600px;
   display: grid;
+  background-color: white;
 }
 
 .grid-item {
