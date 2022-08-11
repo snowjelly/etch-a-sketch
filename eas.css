@@ -37,6 +37,11 @@ body {
   height: 600px;
   display: grid;
   background-color: white;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .grid-item {
