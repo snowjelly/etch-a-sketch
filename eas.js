@@ -10,6 +10,9 @@ let strokeBuffer = []; //  stores the latest stroke data
 let strokeList = []; // stores stroke history
 let strokeCount = 0;
 let prevStrokeColor = "";
+let historyPos = 0;
+
+
 // quick bugfix to prevent pen always being down
 wrapper.addEventListener('mouseup', () => {
         mousedown = false;
@@ -93,6 +96,7 @@ const getPrevStroke = (gridItem) => {
       strokeList.push(strokeBuffer);
       strokeCount++;
       strokeBuffer = [];
+      historyPos = strokeList.length - 1;
       return strokeList;
     } else {
       const strokeColor = gridItem.getAttribute('style').replace('background-color: ', '');
@@ -101,15 +105,15 @@ const getPrevStroke = (gridItem) => {
       return strokeBuffer;
     }
   }
-
-const drawHistory = (stroke) => {
-
+const drawHistory = () => {
+    console.log(strokeList[historyPos]);
+    historyPos--;
 }
 
   //  undo
   window.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 'z') {
-      drawHistory(strokeList[strokeList.length - 1]);
+      drawHistory();
     }
   });
 
