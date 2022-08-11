@@ -7,7 +7,13 @@ let gridItemColor = "";
 let eraserSelected = false;
 let strokeComplete = false;
 let strokeBuffer = []; //  stores the latest stroke data
+let wasBuffer = [];
+let isBuffer = [];
+let atBuffer = [];
 let strokeList = []; // stores stroke history
+let wasList = [];
+let isList = [];
+let atList = [];
 let strokeCount = 0;
 let prevStrokeColor = "";
 let historyPos = 0;
@@ -30,7 +36,7 @@ const createDivs = (gridSize = 16) => {
   for (i = 0; i < gridSize * gridSize; i++) {
     const newDiv = document.createElement('div');
     newDiv.classList.toggle('grid-item');
-    newDiv.classList.toggle(i);
+    newDiv.setAttribute('id', i);
     newDiv.setAttribute('draggable', 'false');
     newDiv.setAttribute('style', 'background-color: white');
     gridContainer.appendChild(newDiv);
@@ -62,8 +68,10 @@ const draw = (gridItemColor) => {
         getPrevStroke(gridItem);
         if (eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
+          gridItem.classList.add('touched');
         } else {
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+          gridItem.classList.add('touched');
         }
         console.log(getStroke(gridItem, prevStrokeColor));
       });
@@ -71,9 +79,11 @@ const draw = (gridItemColor) => {
         getPrevStroke(gridItem);
         if (mousedown && eraserSelected === false) {  
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+          gridItem.classList.add('touched');
           console.log(getStroke(gridItem, prevStrokeColor));
         } else if (mousedown && eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
+          gridItem.classList.add('touched');
           console.log(getStroke(gridItem, prevStrokeColor));
         } 
         });
@@ -91,28 +101,53 @@ const getPrevStroke = (gridItem) => {
   return prevStrokeColor;
 }
 
-  const getStroke = (gridItem, prevStrokeColor) => {
-    if (strokeComplete) {
-      strokeList.push(strokeBuffer);
-      strokeCount++;
-      strokeBuffer = [];
-      historyPos = strokeList.length - 1;
-      return strokeList;
-    } else {
-      const strokeColor = gridItem.getAttribute('style').replace('background-color: ', '');
-      const strokePos = gridItem.className.replace('grid-item ', '');
-      strokeBuffer.push("was:" + prevStrokeColor + ", " + "is:" + strokeColor + ", " + "at:" + strokePos);
-      return strokeBuffer;
-    }
+const getStroke = (gridItem, prevStrokeColor) => {
+  if (strokeComplete) {
+    strokeList.push(strokeBuffer);
+    wasList.push(wasBuffer);
+    isList.push(isBuffer);
+    atList.push(atBuffer);
+    strokeCount++;
+    strokeBuffer = [];
+    //historyPos = strokeList.length - 1; 
+    return strokeList;
+  } else {
+    const strokeColor = gridItem.getAttribute('style').replace('background-color: ', '');
+    const strokePos = gridItem.getAttribute('id');
+    strokeBuffer.push("was:" + prevStrokeColor + ", " + "is:" + strokeColor + ", " + "at:" + strokePos);
+    wasBuffer.push(prevStrokeColor);
+    isBuffer.push(strokeColor);
+    atBuffer.push(strokePos);
+    return strokeBuffer;
   }
-const drawHistory = () => {
-    console.log(strokeList[historyPos]);
-    historyPos--;
 }
+
+
+
+const drawHistory = () => { //  need to extract was: and pos:
+  const gridItems = document.querySelectorAll('.touched');
+  let count = 0;
+  gridItems.forEach((gridItem) => {
+    const gridItemAt = gridItem.className.replace('grid-item ', '').replace(' touched', '');
+    while (atList.toString().includes(gridItemAt)) {
+    // need to ignore gridItems besides atList[historyPos]
+    console.log("enter while loop");
+    if (atList[historyPos] == gridItemAt) {
+    gridItem.setAttribute('style', 'background-color: ' + prevStrokeColor);
+
+    }
+    console.log(gridItemAt);
+    console.log(atList[historyPos]);
+
+    }
+  });
+}
+
 
   //  undo
   window.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 'z') {
+      historyPos--;
       drawHistory();
     }
   });
@@ -159,3 +194,10 @@ const sliderUpdate = slider.oninput = () => {
 createDivs();
 gridItemColor = 'red';
 draw(gridItemColor);
+
+const selector = (is, at) => {
+  const yes = document.getElementById(at)  
+  yes.setAttribute('style', 'background-color: ' + is); 
+
+}
+selector('blue', 0);
