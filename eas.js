@@ -58,7 +58,7 @@ const draw = (gridItemColor) => {
       
   }); 
 }
-
+  // eraser button
   const eraser = document.querySelector('.eraser-container button');
   eraser.addEventListener('click', () => {
     if (eraserSelected) {
@@ -67,6 +67,11 @@ const draw = (gridItemColor) => {
       eraserSelected = true;
     }
     console.log(gridItemColor);
+  });
+
+  const clear = document.querySelector('.clear-container button');
+  clear.addEventListener('click', () => {
+    sliderUpdate();
   });
 
 
@@ -78,7 +83,7 @@ const removeDivs = () => {
 }
 
 // update Grid size when slider is used
-slider.oninput = () => {
+const sliderUpdate = slider.oninput = () => {
   sliderSize.forEach((size) => {
       size.innerHTML = slider.value;
     });
