@@ -27,13 +27,24 @@ const getGridSize = (size) => {
   gridSize = size;
   return gridSize;
 }
-
+let mousedown = false;
 const draw = (gridItemColor) => {
   const gridItems = document.querySelectorAll('.grid-item');
   gridItems.forEach((gridItem) => { //if mousedown then mouseenter/exit then stop if mouseup
-      gridItem.addEventListener('mouseenter', () => {
+      gridItem.addEventListener('mousedown', () => {
+        mousedown = true;
+        //add class clicked? or just store a variable prolly  
         gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
-    });
+      });
+      gridItem.addEventListener('mouseenter', () => {
+        if (mousedown) {  
+          gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+        }
+        });
+      gridItem.addEventListener('mouseup', () => {
+        mousedown = false;
+      });
+      
   }); 
 }
 const removeDivs = () => {
