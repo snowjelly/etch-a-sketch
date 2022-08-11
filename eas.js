@@ -1,8 +1,14 @@
 const gridContainer = document.querySelector('.grid-container');
 const slider = document.getElementById('slider');
 const sliderSize = document.querySelectorAll('#value');
+const wrapper = document.querySelector('.wrapper');
 let gridSize = 0;
-
+let gridItemColor = "";
+let eraserSelected = false;
+// quick bugfix to prevent pen always being down
+wrapper.addEventListener('mouseup', () => {
+        mousedown = false;
+      });
 //  need to add the extra credit assignment, clear button and more than 0 styling
   
 
@@ -33,12 +39,17 @@ const draw = (gridItemColor) => {
   gridItems.forEach((gridItem) => { //if mousedown then mouseenter/exit then stop if mouseup
       gridItem.addEventListener('mousedown', () => {
         mousedown = true;
-        //add class clicked? or just store a variable prolly  
-        gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+        if (eraserSelected) {
+          gridItem.setAttribute('style', 'background-color: white')
+        } else {
+          gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+        }
       });
       gridItem.addEventListener('mouseenter', () => {
-        if (mousedown) {  
+        if (mousedown && eraserSelected === false) {  
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+        } else if (mousedown && eraserSelected) {
+          gridItem.setAttribute('style', 'background-color: white')
         }
         });
       gridItem.addEventListener('mouseup', () => {
@@ -47,6 +58,18 @@ const draw = (gridItemColor) => {
       
   }); 
 }
+
+  const eraser = document.querySelector('.eraser-container button');
+  eraser.addEventListener('click', () => {
+    if (eraserSelected) {
+      eraserSelected = false;
+    } else {
+      eraserSelected = true;
+    }
+    console.log(gridItemColor);
+  });
+
+
 const removeDivs = () => {
   const gridItems = document.querySelectorAll('.grid-item');
   gridItems.forEach((gridItem) => {
@@ -61,9 +84,10 @@ slider.oninput = () => {
     });
     removeDivs();
     createDivs(slider.value);
-    draw('red');
+    draw(gridItemColor);
 }
 
+// init
 createDivs();
-draw('red');
-
+gridItemColor = 'red';
+draw(gridItemColor);
