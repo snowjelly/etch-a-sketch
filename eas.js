@@ -69,9 +69,11 @@ const draw = (gridItemColor) => {
         if (eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
           gridItem.classList.add('touched');
+          gridItem.classList.add('prev-color-' + prevStrokeColor);
         } else {
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
           gridItem.classList.add('touched');
+          gridItem.classList.add('prev-color-' + prevStrokeColor);
         }
         console.log(getStroke(gridItem, prevStrokeColor));
       });
@@ -80,10 +82,12 @@ const draw = (gridItemColor) => {
         if (mousedown && eraserSelected === false) {  
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
           gridItem.classList.add('touched');
+          gridItem.classList.add('prev-color-' + prevStrokeColor);
           console.log(getStroke(gridItem, prevStrokeColor));
         } else if (mousedown && eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
           gridItem.classList.add('touched');
+          gridItem.classList.add('prev-color-' + prevStrokeColor);
           console.log(getStroke(gridItem, prevStrokeColor));
         } 
         });
@@ -109,6 +113,9 @@ const getStroke = (gridItem, prevStrokeColor) => {
     atList.push(atBuffer);
     strokeCount++;
     strokeBuffer = [];
+    wasBuffer = [];
+    isBuffer = [];
+    atBuffer = [];
     //historyPos = strokeList.length - 1; 
     return strokeList;
   } else {
@@ -148,7 +155,10 @@ const drawHistory = () => { //  need to extract was: and pos:
   window.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 'z') {
       historyPos--;
-      drawHistory();
+      //drawHistory();
+      for (at of atList) {
+        console.log(at);
+      }
     }
   });
 
@@ -201,3 +211,4 @@ const selector = (is, at) => {
 
 }
 selector('blue', 0);
+
