@@ -5,6 +5,10 @@ const wrapper = document.querySelector('.wrapper');
 let gridSize = 0;
 let gridItemColor = "";
 let eraserSelected = false;
+let strokeComplete = false;
+let strokeBuffer = [];
+let strokeList = [];
+let counter = 0;
 // quick bugfix to prevent pen always being down
 wrapper.addEventListener('mouseup', () => {
         mousedown = false;
@@ -44,16 +48,25 @@ const draw = (gridItemColor) => {
         } else {
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
         }
+        strokeBuffer.push((gridItem.getAttribute('style').replace('background-color: ', '')));
       });
       gridItem.addEventListener('mouseenter', () => {
         if (mousedown && eraserSelected === false) {  
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
+          strokeBuffer.push((gridItem.getAttribute('style').replace('background-color: ', '')));
         } else if (mousedown && eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
-        }
+          strokeBuffer.push((gridItem.getAttribute('style').replace('background-color: ', '')));
+        } 
         });
       gridItem.addEventListener('mouseup', () => {
         mousedown = false;
+        strokeComplete = true;
+        strokeList.push("["+ counter, strokeBuffer + "]");
+        counter++;
+        console.log("strokeBuffer:" + strokeBuffer);
+        console.log("strokeList:" + strokeList);
+        strokeBuffer = [];
       });
       
   }); 
@@ -81,6 +94,8 @@ const removeDivs = () => {
     gridContainer.removeChild(gridItem);
   });
 }
+
+//lets make a buffer to store the last however many changes made to undo them
 
 // update Grid size when slider is used
 const sliderUpdate = slider.oninput = () => {
