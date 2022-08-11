@@ -83,7 +83,7 @@ const draw = (gridItemColor) => {
     } else {
       const strokeColor = gridItem.getAttribute('style').replace('background-color: ', '');
       const strokePos = gridItem.className.replace('grid-item ', '');
-      strokeBuffer.push(strokeColor, strokePos);
+      strokeBuffer.push(strokeColor + "-" + strokePos);
       return strokeBuffer;
     }
   }
