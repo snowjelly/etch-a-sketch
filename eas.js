@@ -48,34 +48,46 @@ const draw = (gridItemColor) => {
   gridItems.forEach((gridItem) => { //if mousedown then mouseenter/exit then stop if mouseup
       gridItem.addEventListener('mousedown', () => {
         mousedown = true;
+        strokeComplete = false;
         if (eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
         } else {
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
         }
-        strokeBuffer.push('[strokeColor:' + (gridItem.getAttribute('style').replace('background-color: ', '')), 'strokePositions:' + gridItem.className.replace('grid-item ', ''));
+        console.log(getStroke(gridItem));
       });
       gridItem.addEventListener('mouseenter', () => {
         if (mousedown && eraserSelected === false) {  
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
-          strokeBuffer.push('[strokeColor:' + (gridItem.getAttribute('style').replace('background-color: ', '')), 'strokePositions:' + gridItem.className.replace('grid-item ', ''));
+          console.log(getStroke(gridItem));
         } else if (mousedown && eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
-          strokeBuffer.push('[strokeColor:' + (gridItem.getAttribute('style').replace('background-color: ', '')), 'strokePositions:' + gridItem.className.replace('grid-item ', ''));
+          console.log(getStroke(gridItem));
         } 
         });
       gridItem.addEventListener('mouseup', () => {
         mousedown = false;
         strokeComplete = true;
-        strokeList.push("[strokeCount:"+ strokeCount, "stroke:" + strokeBuffer + "]");
-        strokeCount++;
-        console.log("strokeBuffer:" + strokeBuffer);
-        console.log("strokeList:" + strokeList);
-        strokeBuffer = [];
+        console.log(getStroke(gridItem));
       });
       
   }); 
 }
+
+  const getStroke = (gridItem) => {
+    if (strokeComplete) {
+      strokeList.push(strokeBuffer);
+      strokeCount++;
+      strokeBuffer = [];
+      return strokeList;
+    } else {
+      const strokeColor = gridItem.getAttribute('style').replace('background-color: ', '');
+      const strokePos = gridItem.className.replace('grid-item ', '');
+      strokeBuffer.push(strokeColor, strokePos);
+      return strokeBuffer;
+    }
+  }
+
   // eraser button
   const eraser = document.querySelector('.eraser-container button');
   eraser.addEventListener('click', () => {
@@ -87,6 +99,7 @@ const draw = (gridItemColor) => {
     console.log(gridItemColor);
   });
 
+  //  clear button
   const clear = document.querySelector('.clear-container button');
   clear.addEventListener('click', () => {
     sliderUpdate();
