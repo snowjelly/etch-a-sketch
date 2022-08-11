@@ -8,7 +8,7 @@ let eraserSelected = false;
 let strokeComplete = false;
 let strokeBuffer = [];
 let strokeList = [];
-let counter = 0;
+let strokeCount = 0;
 // quick bugfix to prevent pen always being down
 wrapper.addEventListener('mouseup', () => {
         mousedown = false;
@@ -26,6 +26,7 @@ const createDivs = (gridSize = 16) => {
   for (i = 0; i < gridSize * gridSize; i++) {
     const newDiv = document.createElement('div');
     newDiv.classList.toggle('grid-item');
+    newDiv.classList.toggle(i);
     newDiv.setAttribute('draggable', 'false');
     gridContainer.appendChild(newDiv);
   }
@@ -37,6 +38,10 @@ const getGridSize = (size) => {
   gridSize = size;
   return gridSize;
 }
+//  strokeBuffer holds a temporary array of the latest stroke colors
+//  strokeList holds an array of every strokeBuffer
+//  i need to gather more data. for example: the position of each gridItem
+// 
 let mousedown = false;
 const draw = (gridItemColor) => {
   const gridItems = document.querySelectorAll('.grid-item');
@@ -48,22 +53,22 @@ const draw = (gridItemColor) => {
         } else {
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
         }
-        strokeBuffer.push((gridItem.getAttribute('style').replace('background-color: ', '')));
+        strokeBuffer.push('[strokeColor:' + (gridItem.getAttribute('style').replace('background-color: ', '')), 'strokePositions:' + gridItem.className.replace('grid-item ', ''));
       });
       gridItem.addEventListener('mouseenter', () => {
         if (mousedown && eraserSelected === false) {  
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
-          strokeBuffer.push((gridItem.getAttribute('style').replace('background-color: ', '')));
+          strokeBuffer.push('[strokeColor:' + (gridItem.getAttribute('style').replace('background-color: ', '')), 'strokePositions:' + gridItem.className.replace('grid-item ', ''));
         } else if (mousedown && eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
-          strokeBuffer.push((gridItem.getAttribute('style').replace('background-color: ', '')));
+          strokeBuffer.push('[strokeColor:' + (gridItem.getAttribute('style').replace('background-color: ', '')), 'strokePositions:' + gridItem.className.replace('grid-item ', ''));
         } 
         });
       gridItem.addEventListener('mouseup', () => {
         mousedown = false;
         strokeComplete = true;
-        strokeList.push("["+ counter, strokeBuffer + "]");
-        counter++;
+        strokeList.push("[strokeCount:"+ strokeCount, "stroke:" + strokeBuffer + "]");
+        strokeCount++;
         console.log("strokeBuffer:" + strokeBuffer);
         console.log("strokeList:" + strokeList);
         strokeBuffer = [];
