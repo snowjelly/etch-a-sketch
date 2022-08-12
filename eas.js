@@ -38,6 +38,7 @@ const createDivs = (gridSize = 16) => {
     const newDiv = document.createElement('div');
     newDiv.classList.toggle('grid-item');
     newDiv.setAttribute('id', i);
+    //newDiv.classList.add(i);
     newDiv.setAttribute('draggable', 'false');
     newDiv.setAttribute('style', 'background-color: white');
     gridContainer.appendChild(newDiv);
@@ -98,6 +99,9 @@ const draw = (gridItemColor) => {
         console.log(getStroke(gridItem));
       });
       
+
+
+
   }); 
 }
 
@@ -144,16 +148,31 @@ const drawHistory = () => { //  need to extract was: and pos:
   });
 
 console.log(strokeList[historyPos]);
-selector()
+console.log(wasList[historyPos]);
+console.log(isList[historyPos]);
+console.log(atList[historyPos]);
+undo(wasList[historyPos], isList[historyPos], atList[historyPos]);
 
 }
-
-const selector = (was, is, at) => {
-  const yes = document.getElementById(at)  
-  yes.setAttribute('style', 'background-color: ' + is); 
-
+//  swap was and is
+const undo = (was, is, at) => {   
+  const grabIds = document.querySelectorAll('.touched');
+  let count = 0;
+  grabIds.forEach((id) => {
+    while (true) {
+      if (id.getAttribute('id') == at[count]) {
+        console.log('undid');
+        id.setAttribute('style', 'background-color: ' + was);
+        id.classList.remove('prev-color-' + was);
+        id.classList.add('prev-color-' + is);
+        count++;
+        break;
+      } 
+      
+    }
+  });
 }
-selector('blue', 0);
+
 
 //  undo
 window.addEventListener('keydown', function(event) {
