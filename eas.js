@@ -17,6 +17,7 @@ let atList = [];
 let strokeCount = 0;
 let prevStrokeColor = "";
 let historyPos = 0;
+let redoPos = 0;
 
 
 // quick bugfix to prevent pen always being down
@@ -75,7 +76,7 @@ const draw = (gridItemColor) => {
           gridItem.classList.add('touched');
           gridItem.classList.add('prev-color-' + prevStrokeColor);
         }
-        console.log(getStroke(gridItem, prevStrokeColor));
+        getStroke(gridItem, prevStrokeColor);
       });
       gridItem.addEventListener('mouseenter', () => {
         getPrevStroke(gridItem);
@@ -83,12 +84,12 @@ const draw = (gridItemColor) => {
           gridItem.setAttribute('style', 'background-color: ' + gridItemColor);
           gridItem.classList.add('touched');
           gridItem.classList.add('prev-color-' + prevStrokeColor);
-          console.log(getStroke(gridItem, prevStrokeColor));
+          getStroke(gridItem, prevStrokeColor);
         } else if (mousedown && eraserSelected) {
           gridItem.setAttribute('style', 'background-color: white')
           gridItem.classList.add('touched');
           gridItem.classList.add('prev-color-' + prevStrokeColor);
-          console.log(getStroke(gridItem, prevStrokeColor));
+          getStroke(gridItem, prevStrokeColor);
         } 
         });
       gridItem.addEventListener('mouseup', () => {
@@ -116,7 +117,7 @@ const getStroke = (gridItem, prevStrokeColor) => {
     wasBuffer = [];
     isBuffer = [];
     atBuffer = [];
-    //historyPos = strokeList.length - 1; 
+    historyPos = strokeList.length - 1;
     return strokeList;
   } else {
     const strokeColor = gridItem.getAttribute('style').replace('background-color: ', '');
@@ -133,35 +134,53 @@ const getStroke = (gridItem, prevStrokeColor) => {
 
 const drawHistory = () => { //  need to extract was: and pos:
   const gridItems = document.querySelectorAll('.touched');
-  let count = 0;
   gridItems.forEach((gridItem) => {
-    const gridItemAt = gridItem.className.replace('grid-item ', '').replace(' touched', '');
-    while (atList.toString().includes(gridItemAt)) {
-    // need to ignore gridItems besides atList[historyPos]
-    console.log("enter while loop");
-    if (atList[historyPos] == gridItemAt) {
-    gridItem.setAttribute('style', 'background-color: ' + prevStrokeColor);
-
-    }
-    console.log(gridItemAt);
-    console.log(atList[historyPos]);
-
-    }
+    // (atList[historyPos] == gridItem.className.replace('', '')) {
+    //gridItem.setAttribute('style', 'background-color: ' + prevStrokeColor);
+    //}
+    
+    //
+    //grabs the prev-color of all touched items. console.log(gridItem.className.split(' ')[2].replace('prev-color-', ''));
   });
+
+console.log(strokeList[historyPos]);
+selector()
+
 }
 
+const selector = (was, is, at) => {
+  const yes = document.getElementById(at)  
+  yes.setAttribute('style', 'background-color: ' + is); 
 
-  //  undo
-  window.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && event.key === 'z') {
+}
+selector('blue', 0);
+
+//  undo
+window.addEventListener('keydown', function(event) {
+  if (event.ctrlKey && event.key === 'z') {
+    if (historyPos > 0) {
       historyPos--;
-      //drawHistory();
-      for (at of atList) {
-        console.log(at);
-      }
+    } else {
+      console.log('Cannot undo anymore');
     }
-  });
+    drawHistory();
+    console.log(historyPos);
+  }
+});
 
+
+//  redo
+window.addEventListener('keydown', function(event) {
+  if (event.ctrlKey && event.key === 'y') {
+    if (historyPos < strokeList.length - 1) {
+    historyPos++;
+    } else {
+      console.log('Cannot redo anymore');
+    }
+    drawHistory();
+    console.log(historyPos);
+  }
+});
 
   // eraser button
   const eraser = document.querySelector('.eraser-container button');
@@ -205,10 +224,4 @@ createDivs();
 gridItemColor = 'red';
 draw(gridItemColor);
 
-const selector = (is, at) => {
-  const yes = document.getElementById(at)  
-  yes.setAttribute('style', 'background-color: ' + is); 
-
-}
-selector('blue', 0);
 
